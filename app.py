@@ -1,4 +1,4 @@
-mport sys
+import sys
 from flask import Flask
 from github import RateLimitExceededException
 from github import Github
@@ -24,10 +24,10 @@ except RateLimitExceededException:
 
 
 
-"""This function will get the latest version of the required config_file from the connected repository"""
-def Response_error_check(config_file):
+
+def Response_error_check(configuration):
     try:
-        return git_username_repo.get_file_contents(config_file).content.decode(git_username_repo.get_contents(config_file).encoding)
+        return git_username_repo.get_file_contents(configuration).content.decode(git_username_repo.get_contents(configuration).encoding)
     except UnknownObjectException as e:
         return "File Not Found"
     except RateLimitExceededException:
@@ -36,12 +36,12 @@ def Response_error_check(config_file):
 
 
 
-@app.route("/v1/<config_file>")
-def controller(config_file):
+@app.route("/v1/<configuration>")
+def controller(configuration):
         if isinstance(git_username_repo, basestring):
             return git_username_repo
         else:
-            return Response_error_check(config_file)
+            return Response_error_check(configuration)
 
 if __name__ == "__main__":
     app.config["url"] = sys.argv[1]
